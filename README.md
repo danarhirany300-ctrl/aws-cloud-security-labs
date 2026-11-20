@@ -3,6 +3,10 @@
 Hands-on labs where I find and fix common AWS security problems.
 I built these while learning cloud security, coming from a SOC analyst background.
 
+![Checkov](https://github.com/danarhirany300-ctrl/aws-cloud-security-labs/actions/workflows/checkov.yml/badge.svg)
+
+Terraform code is scanned automatically by Checkov on every push (GitHub Actions). First scan: 14 findings. I fixed 4 types (versioning, KMS encryption, lifecycle rules, security group description) and skipped 4 types with written reasons (cost or lab scope).
+
 ## What is inside
 
 | Folder | File | What it does |
