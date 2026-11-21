@@ -41,3 +41,10 @@ The IP address in the security group is an example (`203.0.113.10`). Replace it 
 - Run Checkov automatically with GitHub Actions
 - Write least-privilege IAM policies
 - Add KMS encryption
+
+## IAM least privilege
+
+`terraform/iam-least-privilege/` has a policy that can only read objects from one S3 bucket (no write, no delete, no other buckets), and a role that only EC2 can use.
+`bash/test_iam_policy.sh` proves this with the IAM policy simulator. Checkov result: 20 passed, 0 failed.
+
+Note: if the bucket is encrypted with KMS, the role also needs `kms:Decrypt` on that key.
