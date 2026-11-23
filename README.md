@@ -48,3 +48,10 @@ The IP address in the security group is an example (`203.0.113.10`). Replace it 
 `bash/test_iam_policy.sh` proves this with the IAM policy simulator. Checkov result: 20 passed, 0 failed.
 
 Note: if the bucket is encrypted with KMS, the role also needs `kms:Decrypt` on that key.
+
+## Role with MFA
+
+`terraform/mfa-role/` has a read-only security auditor role (AWS `SecurityAudit` policy).
+Only one named IAM user can assume it, and only if MFA was used (`aws:MultiFactorAuthPresent`).
+Sessions last 1 hour, so the credentials are temporary. The user ARN is a variable, so no account number is stored in the repo.
+Checkov result: 19 passed, 0 failed. The role was scanned and validated, but not applied to AWS.
