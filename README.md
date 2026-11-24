@@ -69,3 +69,6 @@ How I did it:
 Result: all 6 resources were created, then verified (versioning on, public access blocked, KMS encryption on), then destroyed.
 
 Lesson learned: the AWS provider puts the account ID in front of the S3 Control host name, so `127.0.0.1` fails and `localhost` works. Tool versions must match: pin your provider and LocalStack versions.
+
+## Security exercise notes
+`docs/flaws-cloud-notes.md` has my notes on the flaws.cloud AWS challenges: the mistakes, how to prevent them, and how to detect them.
