@@ -72,3 +72,18 @@ Lesson learned: the AWS provider puts the account ID in front of the S3 Control 
 
 ## Security exercise notes
 `docs/flaws-cloud-notes.md` has my notes on the flaws.cloud AWS challenges: the mistakes, how to prevent them, and how to detect them.
+
+## Reusable secure bucket module
+
+`terraform/modules/secure-bucket/` is a Terraform module. A team gives only a bucket name and gets a bucket with: all public access blocked, ACLs turned off, versioning, KMS encryption with key rotation, and a lifecycle rule.
+
+```hcl
+module "invoices" {
+  source      = "../modules/secure-bucket"
+  bucket_name = "my-unique-bucket-name"
+}
+```
+
+`terraform/secure-buckets/` uses the module twice. Checkov result: 36 passed, 0 failed, 6 skipped (3 documented skips per bucket, with reasons in the module).
+Tested with `apply` and `destroy` on LocalStack, and the result was checked with the AWS CLI: both buckets had the same protections.
+Trade-off: each module call creates its own KMS key. On real AWS, a key costs money, so a company might share one key per team.
