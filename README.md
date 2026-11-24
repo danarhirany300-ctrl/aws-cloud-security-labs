@@ -55,3 +55,17 @@ Note: if the bucket is encrypted with KMS, the role also needs `kms:Decrypt` on 
 Only one named IAM user can assume it, and only if MFA was used (`aws:MultiFactorAuthPresent`).
 Sessions last 1 hour, so the credentials are temporary. The user ARN is a variable, so no account number is stored in the repo.
 Checkov result: 19 passed, 0 failed. The role was scanned and validated, but not applied to AWS.
+
+## Free local testing with LocalStack
+
+You can run `terraform apply` on a fake AWS on your own computer: no AWS account, no cost, nothing touches a real account.
+
+How I did it:
+1. Start LocalStack (version 4.14, the last one that needs no auth token), bound only to your own machine (`127.0.0.1:4566`).
+2. Set fake test credentials and `AWS_ENDPOINT_URL=http://127.0.0.1:4566` in the terminal. Check with `aws sts get-caller-identity`: the account must be made of zeros. If it is a real account number, stop.
+3. Copy `terraform/s3-bucket/localstack_override.tf.example` to `localstack_override.tf` (Git ignores it) and run `terraform init`, `plan`, `apply`.
+4. Check the result with the AWS CLI, then run `terraform destroy`.
+
+Result: all 6 resources were created, then verified (versioning on, public access blocked, KMS encryption on), then destroyed.
+
+Lesson learned: the AWS provider puts the account ID in front of the S3 Control host name, so `127.0.0.1` fails and `localhost` works. Tool versions must match: pin your provider and LocalStack versions.
